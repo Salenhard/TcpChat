@@ -13,19 +13,16 @@ import java.util.List;
 public class UserController {
     private final UserService service;
     private final UserMapper mapper = UserMapper.INSTANCE;
-    private final JWTService JWTService;
+    private final JWTService jwtService;
 
     public UserDto get(String id) {
         return service.findById(id).map(mapper::toDto).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public boolean validate(String token) {
-        try {
-            JWTService.extractAllClaims(token);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+    public String validate(String token) throws RuntimeException {
+        String username = "";
+        username = jwtService.validateToken(token);
+        return username;
     }
 
     public UserDto add(@Valid UserDto dto) {

@@ -13,11 +13,9 @@ import java.util.Scanner;
 public class Client {
     private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 12345;
-    private final String username;
     private final String jwtToken;
 
-    public Client(String username, String jwtToken) {
-        this.username = username;
+    public Client(String jwtToken) {
         this.jwtToken = jwtToken;
     }
 
@@ -43,7 +41,6 @@ public class Client {
             Scanner scanner = new Scanner(System.in);
             String userInput;
             out.println(jwtToken);
-            out.println(username);
             long chatId = 0L;
             while (true) {
                 Long id = null;
@@ -69,7 +66,8 @@ public class Client {
                 }
 
                 if (userInput.startsWith("/createChat")) {
-                    if(!validCommand(userInput, 2)){
+                    if(!validCommand(userInput, 2) && !validCommand(userInput, 1)){
+                        System.out.println("Wrong format of the command");
                         continue;
                     }
                     Chat chat = new Chat();
@@ -83,7 +81,8 @@ public class Client {
                 }
 
                 if (userInput.startsWith("/editChat")) {
-                    if(!validCommand(userInput, 3) || !validCommand(userInput, 2)){
+                    if(!validCommand(userInput, 3) && !validCommand(userInput, 2)){
+                        System.out.println("Wrong format of the command");
                         continue;
                     }
                     if (userInput.split(" ").length != 3)
@@ -95,14 +94,16 @@ public class Client {
 
                 if (userInput.startsWith("/deleteChat")) {
                     if(!validCommand(userInput, 1)){
+                        System.out.println("Wrong format of the command");
                         continue;
                     }
-                    out.println("delete " + userInput.split(" ")[1]);
+                    out.println("deleteChat " + userInput.split(" ")[1]);
                     continue;
                 }
 
                 if (userInput.startsWith("/add")) {
                     if(!validCommand(userInput, 2)){
+                        System.out.println("Wrong format of the command");
                         continue;
                     }
                     out.println("add " + userInput.split(" ")[1] + " " + userInput.split(" ")[2]);
@@ -111,6 +112,7 @@ public class Client {
 
                 if (userInput.startsWith("/remove")) {
                     if(!validCommand(userInput, 2)){
+                        System.out.println("Wrong format of the command");
                         continue;
                     }
                     out.println("remove " + userInput.split(" ")[1] + " " + userInput.split(" ")[2]);
@@ -124,6 +126,7 @@ public class Client {
 
                 if (userInput.startsWith("/search")) {
                     if(!validCommand(userInput, 1)){
+                        System.out.println("Wrong format of the command");
                         continue;
                     }
                     out.println("search " + userInput.split(" ")[1]);
@@ -132,6 +135,7 @@ public class Client {
 
                 if (userInput.startsWith("/join")) {
                     if(!validCommand(userInput, 1)){
+                        System.out.println("Wrong format of the command");
                         continue;
                     }
                     try {
@@ -157,6 +161,7 @@ public class Client {
 
                 if (userInput.startsWith("/edit")) {
                     if(!validCommand(userInput, 2)){
+                        System.out.println("Wrong format of the command");
                         continue;
                     }
                     try {
@@ -170,6 +175,7 @@ public class Client {
 
                 if (userInput.startsWith("/delete")) {
                     if(!validCommand(userInput, 1)){
+                        System.out.println("Wrong format of the command");
                         continue;
                     }
                     try {
@@ -199,10 +205,6 @@ public class Client {
         }
     }
     private boolean validCommand(String userInput, int argsCount) {
-        if(userInput.split(" ").length != argsCount + 1) {
-            System.out.println("Wrong format of the command");
-            return false;
-        }
-        return true;
+        return userInput.split(" ").length == argsCount + 1;
     }
 }

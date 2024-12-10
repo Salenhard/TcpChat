@@ -1,3 +1,5 @@
+drop table if exists "user_role";
+drop table if exists "user";
 create table "user" (
    username varchar(255) not null,
    password varchar(255),

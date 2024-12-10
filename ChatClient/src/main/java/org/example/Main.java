@@ -27,7 +27,7 @@ public class Main {
                 System.out.println(verify.getMessage());
             }
         }
-        client = new Client(username, verify.getMessage());
+        client = new Client(verify.getMessage());
         client.run();
     }
 }

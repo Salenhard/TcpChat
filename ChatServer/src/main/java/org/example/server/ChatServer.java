@@ -8,7 +8,6 @@ import org.example.dto.ChatDto;
 import org.example.dto.MessageDto;
 import org.example.dto.UserDto;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -81,9 +80,8 @@ public class ChatServer {
                     close();
                     return;
                 }
-                username = getUsername();
                 if (isOnline(username)) {
-                    out.println("User with this username are already online");
+                    out.printf("User with this username:'$s' is are already online%n", username);
                     close();
                     return;
                 }
@@ -105,7 +103,7 @@ public class ChatServer {
                 clients.remove(this);
                 close();
             } catch (IOException e) {
-                System.out.println("Client disconnected");
+                System.out.printf("Client '%s' disconnected%n", username);
             } finally {
                 clients.remove(this);
             }
@@ -167,7 +165,11 @@ public class ChatServer {
 
         private boolean validate() throws IOException {
             String token = in.readLine();
-            userController.validate(token);
+            try {
+                username = userController.validate(token);
+            } catch (RuntimeException e) {
+                return false;
+            }
             return true;
         }
 

@@ -1,0 +1,9 @@
+/loginService/.gitattributes
+/ChatClient/.gitignore
+/ChatServer/.gitignore
+/loginService/.gitignore
+/loginService/amplicode.xml
+/loginService/Dockerfile
+/loginService/.mvn/wrapper/maven-wrapper.properties
+/loginService/mvnw
+/loginService/mvnw.cmd
