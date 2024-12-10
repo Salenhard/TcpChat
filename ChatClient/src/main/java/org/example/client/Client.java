@@ -15,6 +15,7 @@ public class Client {
     private static final int SERVER_PORT = 12345;
     private final String username;
     private final String jwtToken;
+
     public Client(String username, String jwtToken) {
         this.username = username;
         this.jwtToken = jwtToken;
@@ -68,6 +69,9 @@ public class Client {
                 }
 
                 if (userInput.startsWith("/createChat")) {
+                    if(!validCommand(userInput, 2)){
+                        continue;
+                    }
                     Chat chat = new Chat();
                     chat.setName(userInput.split(" ")[1]);
                     if (userInput.split(" ").length != 3)
@@ -79,6 +83,9 @@ public class Client {
                 }
 
                 if (userInput.startsWith("/editChat")) {
+                    if(!validCommand(userInput, 3) || !validCommand(userInput, 2)){
+                        continue;
+                    }
                     if (userInput.split(" ").length != 3)
                         out.println("edit " + userInput.split(" ")[1] + " " + "false");
                     else
@@ -87,39 +94,59 @@ public class Client {
                 }
 
                 if (userInput.startsWith("/deleteChat")) {
+                    if(!validCommand(userInput, 1)){
+                        continue;
+                    }
                     out.println("delete " + userInput.split(" ")[1]);
                     continue;
                 }
 
                 if (userInput.startsWith("/add")) {
+                    if(!validCommand(userInput, 2)){
+                        continue;
+                    }
                     out.println("add " + userInput.split(" ")[1] + " " + userInput.split(" ")[2]);
                     continue;
                 }
 
                 if (userInput.startsWith("/remove")) {
+                    if(!validCommand(userInput, 2)){
+                        continue;
+                    }
                     out.println("remove " + userInput.split(" ")[1] + " " + userInput.split(" ")[2]);
                     continue;
                 }
 
-                if (userInput.startsWith("/list")) {
+                if (userInput.equals("/list")) {
                     out.println("list");
                     continue;
                 }
 
                 if (userInput.startsWith("/search")) {
+                    if(!validCommand(userInput, 1)){
+                        continue;
+                    }
                     out.println("search " + userInput.split(" ")[1]);
                     continue;
                 }
 
                 if (userInput.startsWith("/join")) {
-                    chatId = Long.parseLong(userInput.split(" ")[1]);
+                    if(!validCommand(userInput, 1)){
+                        continue;
+                    }
+                    try {
+                        chatId = Long.parseLong(userInput.split(" ")[1]);
+                    } catch (RuntimeException e) {
+                        out.println("wrong format of the command");
+                        continue;
+                    }
                     out.println("join " + chatId);
                     continue;
                 }
 
                 if (userInput.equals("/leave")) {
                     chatId = 0L;
-                    System.out.println("You leaved the chat");
+                    System.out.println("You left the chat");
                     continue;
                 }
 
@@ -129,12 +156,28 @@ public class Client {
                 }
 
                 if (userInput.startsWith("/edit")) {
-                    id = Long.parseLong(userInput.split(" ")[1]);
+                    if(!validCommand(userInput, 2)){
+                        continue;
+                    }
+                    try {
+                        id = Long.parseLong(userInput.split(" ")[1]);
+                    } catch (RuntimeException e) {
+                        out.println("wrong format of the command");
+                        continue;
+                    }
                     userInput = userInput.split(" ")[2];
                 }
 
                 if (userInput.startsWith("/delete")) {
-                    id = Long.parseLong(userInput.split(" ")[1]);
+                    if(!validCommand(userInput, 1)){
+                        continue;
+                    }
+                    try {
+                        id = Long.parseLong(userInput.split(" ")[1]);
+                    } catch (RuntimeException e) {
+                        out.println("wrong format of the command");
+                        continue;
+                    }
                     out.println("delete " + id + " " + chatId);
                     continue;
                 }
@@ -154,5 +197,12 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private boolean validCommand(String userInput, int argsCount) {
+        if(userInput.split(" ").length != argsCount + 1) {
+            System.out.println("Wrong format of the command");
+            return false;
+        }
+        return true;
     }
 }

@@ -26,7 +26,6 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
     private final JWTService jwtService;
 
-
     @Override
     public Optional<User> findByUsername(String userName) {
         return userRepository.findByUsername(userName);
