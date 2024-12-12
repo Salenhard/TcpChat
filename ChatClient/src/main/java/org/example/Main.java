@@ -12,7 +12,7 @@ public class Main {
         LoginService loginService = new LoginService();
         Scanner in = new Scanner(System.in);
         Response verify = new Response();
-        String username = "";
+        String username;
         String password;
         Client client;
         while (verify.getCode() != 200) {

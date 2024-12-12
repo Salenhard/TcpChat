@@ -8,6 +8,7 @@ import org.example.dto.ChatDto;
 import org.example.dto.MessageDto;
 import org.example.dto.UserDto;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,7 +48,10 @@ public class ChatServer {
     }
 
     private static void broadcast(MessageDto message, ClientHandler sender) {
-        clients.stream().filter(client -> client != sender).forEach(client -> client.sendMessage(message));
+       clients.stream().filter(client ->
+                       client != sender
+                       && sender.getChatId().equals(client.chatId))
+               .forEach(client -> client.sendMessage(message));
     }
 
     private static class ClientHandler implements Runnable {
@@ -58,6 +62,7 @@ public class ChatServer {
         private PrintWriter out;
         private BufferedReader in;
         private String username;
+        private Long chatId;
 
         public ClientHandler(Socket socket, ChatController chatController, MessageController messageController, UserController userController) {
             this.clientSocket = socket;
@@ -129,7 +134,7 @@ public class ChatServer {
                 chatController.delete(Long.valueOf(inputLine.split(" ")[1]), username);
                 out.println("Chat deleted");
             } else if (inputLine.startsWith("join")) {
-                Long chatId = Long.valueOf(inputLine.split(" ")[1]);
+                chatId = Long.valueOf(inputLine.split(" ")[1]);
                 ChatDto chat = chatController.get(chatId);
                 if (!chat.getUsers().contains(userController.get(username)))
                     chatController.addUser(chatId, username, username);
@@ -211,6 +216,10 @@ public class ChatServer {
         public void sendMessage(MessageDto message) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss");
             out.println("[" + formatter.format(message.getCreatedAt()) + "]" + ":[" + message.getAuthor().getUsername() + "]:" + message.getText() + " :id:" + message.getId() + (message.getIsRead() ? " read" : ""));
+        }
+
+        public Long getChatId() {
+            return chatId;
         }
     }
 }

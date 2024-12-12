@@ -102,10 +102,6 @@ public class Client {
                 }
 
                 if (userInput.startsWith("/add")) {
-                    if(!validCommand(userInput, 2)){
-                        System.out.println("Wrong format of the command");
-                        continue;
-                    }
                     out.println("add " + userInput.split(" ")[1] + " " + userInput.split(" ")[2]);
                     continue;
                 }
